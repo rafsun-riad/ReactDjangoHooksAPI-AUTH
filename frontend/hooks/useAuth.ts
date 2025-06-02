@@ -28,7 +28,7 @@ export function useAuth() {
   const isAuthenticated = !!user;
 
   const jwtLogin = async () => {
-    const token = Cookies.get("adsyclub-jwt");
+    const token = Cookies.get("jwt-token");
     if (!token) {
       setUser(null);
       return false;
