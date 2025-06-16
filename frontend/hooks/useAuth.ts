@@ -44,7 +44,7 @@ export function useAuth() {
 
       if (res.data) {
         setUser(res.data);
-        Cookies.set("adsyclub-jwt", res.data.access);
+        Cookies.set("jwt-token", res.data.access);
         if (res.data.face) {
           Cookies.set("username", res.data.user.username);
         }
@@ -52,7 +52,7 @@ export function useAuth() {
       }
     } catch (err: any) {
       console.error("JWT validation error:", err);
-      Cookies.remove("adsyclub-jwt");
+      Cookies.remove("jwt-token");
       setUser(null);
       return false;
     }
@@ -72,7 +72,7 @@ export function useAuth() {
 
       if (res.data) {
         setUser(res.data);
-        Cookies.set("adsyclub-jwt", res.data.access);
+        Cookies.set("jwt-token", res.data.access);
         if (res.data.face) {
           Cookies.set("username", res.data.user.username);
         }
@@ -91,7 +91,7 @@ export function useAuth() {
 
   const logout = () => {
     setUser(null);
-    Cookies.remove("adsyclub-jwt");
+    Cookies.remove("jwt-token");
     Cookies.remove("username");
     router.push("/");
   };
