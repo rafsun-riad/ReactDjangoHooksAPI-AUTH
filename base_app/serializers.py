@@ -86,6 +86,12 @@ class BlogPostSerializer(serializers.ModelSerializer):
         write_only=True
     )
     category_details = CategorySerializer(source='category', read_only=True)
+    author = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(),
+        write_only=True,
+        required=False
+    )
+    author_details = UserSerializer(source='author', read_only=True)
 
     class Meta:
         model = BlogPost

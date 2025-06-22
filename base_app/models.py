@@ -37,6 +37,8 @@ class Category(models.Model):
 class BlogPost(models.Model):
     id = models.BigIntegerField(
         primary_key=True, default=generate_unique_id, editable=False)
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='blog_posts', null=True, blank=True)
     title = models.CharField(max_length=200)
     content = models.TextField()
     category = models.ForeignKey(
