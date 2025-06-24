@@ -15,5 +15,6 @@ urlpatterns = [
     path('categories/<int:id>/', CategoryDetailView.as_view(),
          name='category-detail'),
     path('blogs/', BlogPostListCreateView.as_view(), name='blog-list-create'),
+    path('my-blogs/', MyBlogPostListView.as_view(), name='my-blog-list'),
     path('blogs/<int:id>/', BlogPostDetailView.as_view(), name='blog-detail'),
 ]  # Define your URL patterns here

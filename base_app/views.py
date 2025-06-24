@@ -73,6 +73,7 @@ class BlogPostListCreateView(generics.ListCreateAPIView):
             self.permission_classes = [IsAuthenticated]
         else:
             self.permission_classes = [AllowAny]
+        return [permission() for permission in self.permission_classes]
 
     def create(self, request, *args, **kwargs):
         # Automatically set the author to the current user if not provided
@@ -87,7 +88,7 @@ class BlogPostListCreateView(generics.ListCreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
-class BlogPostListView(generics.ListAPIView):
+class MyBlogPostListView(generics.ListAPIView):
     queryset = BlogPost.objects.all()
     serializer_class = BlogPostSerializer
     permission_classes = [IsAuthenticated]
@@ -107,3 +108,5 @@ class BlogPostDetailView(generics.RetrieveUpdateDestroyAPIView):
             self.permission_classes = [IsAuthenticated]
         else:
             self.permission_classes = [AllowAny]
+
+        return [permission() for permission in self.permission_classes]

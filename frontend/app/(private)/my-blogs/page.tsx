@@ -1,22 +1,12 @@
 "use client";
 import { useApi } from "@/hooks/useApi";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
-import { type Category } from "../page";
+import { type Category, type BlogFormState, type Blog } from "@/utils/types";
 import { useState } from "react";
-
-type Blog = {
-  id?: number;
-  title: string;
-  content: string;
-  category: string;
-  category_details?: Category;
-};
-
-type BlogFormState = {
-  title: string;
-  content: string;
-  category: string;
-};
+import BlogCard from "@/components/blogcard";
+import BigSpinner from "@/components/bigspinner";
+import { toast } from "sonner";
+import Link from "next/link";
 
 const initialFormState: BlogFormState = {
   title: "",
@@ -32,8 +22,8 @@ function BlogPage() {
   const queryClient = useQueryClient();
 
   const { data: blogs, isLoading } = useQuery({
-    queryKey: ["blogs"],
-    queryFn: () => get("/blogs/"),
+    queryKey: ["my-blogs"],
+    queryFn: () => get("/my-blogs/"),
   });
 
   const { data: categories, isLoading: isLoadingCategories } = useQuery({
@@ -44,9 +34,13 @@ function BlogPage() {
   const mutation = useMutation({
     mutationFn: (newblog: Blog) => post("/blogs/", newblog),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["my-blogs"] });
       queryClient.invalidateQueries({ queryKey: ["blogs"] });
-
+      toast.success("Blog added successfully!");
       setForm(initialFormState);
+    },
+    onError: () => {
+      toast.error("Failed to add blog. Please try again.");
     },
   });
 
@@ -68,7 +62,7 @@ function BlogPage() {
   }
 
   return (
-    <div>
+    <div className="flex flex-col items-center justify-center h-full">
       <h1 className="mt-3">Blogs</h1>
       <div>
         <h2>Add Blog</h2>
@@ -98,7 +92,7 @@ function BlogPage() {
               onChange={handleChange}
             >
               <option value="">Select category</option>
-              {categories?.map((cat: Category) => (
+              {categories?.data.map((cat: Category) => (
                 <option key={cat.id} value={cat.id}>
                   {cat.name}
                 </option>
@@ -113,19 +107,21 @@ function BlogPage() {
           </button>
         </form>
       </div>
-      <div className="grid grid-cols-3 gap-4 mt-5">
+      <div className="mt-6">
         {isLoading ? (
-          <p>Loading...</p>
+          <BigSpinner />
+        ) : blogs?.data?.length ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+            {blogs.data.map((blog: Blog) => (
+              <Link href={`/blog/${blog.id}`} key={blog.id} className="p-4">
+                <BlogCard blog={blog} />
+              </Link>
+            ))}
+          </div>
         ) : (
-          blogs?.map((blog: Blog) => (
-            <div key={blog.id} className="border p-4 rounded shadow-md">
-              <h3 className="text-lg font-semibold">{blog.title}</h3>
-              <p className="mt-2">{blog.content}</p>
-              <p className="mt-2 text-sm text-gray-500">
-                Category: {blog.category_details?.name}
-              </p>
-            </div>
-          ))
+          <div className="text-center mt-4">
+            <p className="text-gray-500">No blogs available at the moment.</p>
+          </div>
         )}
       </div>
     </div>

@@ -1,72 +1,41 @@
 "use client";
 
+import BigSpinner from "@/components/bigspinner";
+import BlogCard from "@/components/blogcard";
 import { useApi } from "@/hooks/useApi";
-import { useState } from "react";
-import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
-export type Category = {
-  id?: number;
-  name: string;
-};
+import { Blog } from "@/utils/types";
+import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
 
 export default function Home() {
-  const { get, post } = useApi();
-  const [category, setCategory] = useState("");
-
-  const queryClient = useQueryClient();
+  const { get } = useApi();
 
   // Fetch categories using useQuery
-  const { data: categories, isLoading } = useQuery({
-    queryKey: ["categories"],
-    queryFn: () => get("/categories/"),
+  const { data: blogs, isLoading } = useQuery({
+    queryKey: ["blogs"],
+    queryFn: () => get("/blogs/"),
   });
 
-  const mutation = useMutation({
-    mutationFn: (newCategory: Category) => post("/categories/", newCategory),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["categories"] });
-      setCategory(""); // Clear the input field after successful submission
-    },
-  });
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    mutation.mutate({ name: category });
-  };
+  if (isLoading) {
+    return <BigSpinner />;
+  }
 
   return (
     <div>
-      <h1 className="mt-3">Categories</h1>
-
-      <div>
-        <h2>Add Category</h2>
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Category name"
-            className="border p-2 rounded"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-          />
-          <button
-            type="submit"
-            className="border border-blue-500 p-2 rounded ml-3 hover:cursor-pointer"
-          >
-            Add
-          </button>
-        </form>
-      </div>
-
-      <div className="grid grid-cols-3 gap-4 mt-5">
-        {isLoading ? (
-          <p>Loading...</p>
-        ) : (
-          categories?.map((category: Category) => (
-            <div key={category.id} className="border p-4 rounded shadow-md">
-              <h3 className="text-lg font-semibold">{category.name}</h3>
-            </div>
-          ))
-        )}
-      </div>
+      <h1 className="mt-3 text-center text-2xl">All Blogs</h1>
+      {blogs?.data?.length ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+          {blogs.data.map((blog: Blog) => (
+            <Link href={`/blog/${blog.id}`} key={blog.id} className="p-4">
+              <BlogCard blog={blog} />
+            </Link>
+          ))}
+        </div>
+      ) : (
+        <div className="text-center mt-4">
+          <p className="text-gray-500">No blogs available at the moment.</p>
+        </div>
+      )}
     </div>
   );
 }

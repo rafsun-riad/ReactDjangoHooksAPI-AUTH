@@ -20,7 +20,7 @@ export function useApi() {
       headers: getAuthHeaders(),
     });
 
-    return response.data;
+    return response;
   };
 
   const post = async (endpoint: string, postData: object | FormData) => {
@@ -28,7 +28,7 @@ export function useApi() {
       headers: getAuthHeaders(),
     });
 
-    return response.data;
+    return response;
   };
 
   const put = async (endpoint: string, postData: object) => {
@@ -39,7 +39,7 @@ export function useApi() {
       },
     });
 
-    return response.data;
+    return response;
   };
 
   const patch = async (endpoint: string, postData: object) => {
@@ -50,7 +50,7 @@ export function useApi() {
       },
     });
 
-    return response.data;
+    return response;
   };
 
   const del = async (endpoint: string) => {
@@ -58,7 +58,7 @@ export function useApi() {
       headers: getAuthHeaders(),
     });
 
-    return response.data;
+    return response;
   };
 
   return {

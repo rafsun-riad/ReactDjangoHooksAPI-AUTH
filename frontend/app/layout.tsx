@@ -1,11 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Link from "next/link";
+import { Toaster } from "sonner";
+
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Header from "@/components/header";
+import Footer from "@/components/footer";
+import { useAuth } from "@/hooks/useAuth";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,30 +26,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const [queryClient] = useState(() => new QueryClient());
+  const { jwtLogin } = useAuth();
+
+  useEffect(() => {
+    jwtLogin();
+  }, [jwtLogin]);
+
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-hidden`}
       >
         <QueryClientProvider client={queryClient}>
-          <Header />
-          <div className="container mx-auto flex flex-col items-center p-4">
-            <nav>
-              <ul className="flex space-x-4">
-                <li>
-                  <Link href="/" className="text-blue-500 hover:underline">
-                    Categories
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/blogs" className="text-blue-500 hover:underline">
-                    Blogs
-                  </Link>
-                </li>
-              </ul>
-            </nav>
-            {children}
+          <div className="h-screen flex flex-col">
+            <Header />
+            <div className="container mx-auto flex-1">{children}</div>
+            <Footer />
           </div>
+          <Toaster richColors position="bottom-right" />
         </QueryClientProvider>
       </body>
     </html>

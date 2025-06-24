@@ -4,6 +4,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { create } from "zustand";
+import { useCallback } from "react";
 
 const baseURL = process.env.NEXT_PUBLIC_BASE_URL + "/api";
 
@@ -27,7 +28,7 @@ export function useAuth() {
 
   const isAuthenticated = !!user;
 
-  const jwtLogin = async () => {
+  const jwtLogin = useCallback(async () => {
     const token = Cookies.get("jwt-token");
     if (!token) {
       setUser(null);
@@ -45,7 +46,7 @@ export function useAuth() {
       if (res.data) {
         setUser(res.data);
         Cookies.set("jwt-token", res.data.access);
-        if (res.data.face) {
+        if (res.data.user?.username) {
           Cookies.set("username", res.data.user.username);
         }
         return true;
@@ -56,7 +57,7 @@ export function useAuth() {
       setUser(null);
       return false;
     }
-  };
+  }, [setUser]);
 
   const login = async (email: string, password: string) => {
     try {

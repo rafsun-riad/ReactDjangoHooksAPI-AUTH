@@ -1,2 +1,11 @@
 venv
 db.sqlite3
+__pycache__
+.vscode
+# Ignore Python bytecode files
+*.pyc
+*.pyo
+*.pyd
+# Ignore compiled Python files
+backend_core/__pycache__/*.pyc
+base_app/__pycache__/*.pyc
