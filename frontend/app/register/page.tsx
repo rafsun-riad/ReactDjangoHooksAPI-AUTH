@@ -30,6 +30,7 @@ function RegisterPage() {
       toast.success("Registration successful!");
       setForm(initialFormState);
       login(form.email, form.password);
+      toast.success("Login successful!");
       router.push("/");
     },
     onError: () => {

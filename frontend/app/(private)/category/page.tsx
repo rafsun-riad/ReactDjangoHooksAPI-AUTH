@@ -4,6 +4,7 @@ import { useApi } from "@/hooks/useApi";
 import { useState } from "react";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { type Category } from "@/utils/types";
+import { toast } from "sonner";
 
 export default function Home() {
   const { get, post } = useApi();
@@ -21,6 +22,7 @@ export default function Home() {
     mutationFn: (newCategory: Category) => post("/categories/", newCategory),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["categories"] });
+      toast.success("Category added successfully!");
       setCategory(""); // Clear the input field after successful submission
     },
   });
