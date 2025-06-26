@@ -23,6 +23,7 @@ function RegisterPage() {
   const { post } = useApi();
   const { login } = useAuth();
 
+  // for user registration
   const regiserMutation = useMutation({
     mutationFn: (newUser: RegsiterUser) => post("/auth/register/", newUser),
     onSuccess: (data) => {
@@ -50,6 +51,7 @@ function RegisterPage() {
     };
     regiserMutation.mutate(newUser);
   }
+
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
     setForm((prev) => ({
