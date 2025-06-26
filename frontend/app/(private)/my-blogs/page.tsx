@@ -63,7 +63,7 @@ function BlogPage() {
 
   return (
     <div className="flex flex-col items-center justify-center h-full">
-      <h1 className="mt-3">Blogs</h1>
+      <h1 className="mt-3">My Blogs</h1>
       <div>
         <h2>Add Blog</h2>
         <form onSubmit={handleSubmit} className="flex flex-col space-y-3">

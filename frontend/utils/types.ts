@@ -9,7 +9,7 @@ export type Blog = {
   content: string;
   category: string;
   category_details?: Category;
-  auhtor?: string;
+  author?: string;
   author_details?: User;
   created_at?: string;
 };
