@@ -1,14 +1,10 @@
-"use client";
-
-import { useState, useEffect } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
 import { Toaster } from "sonner";
+import "./globals.css";
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import Header from "@/components/header";
 import Footer from "@/components/footer";
-import { useAuth } from "@/hooks/useAuth";
+import Header from "@/components/header";
+import QueryAndAuthProvider from "@/providers/QueryAndAuthProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,26 +21,19 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [queryClient] = useState(() => new QueryClient());
-  const { jwtLogin } = useAuth();
-
-  useEffect(() => {
-    jwtLogin();
-  }, [jwtLogin]);
-
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-hidden`}
       >
-        <QueryClientProvider client={queryClient}>
+        <QueryAndAuthProvider>
           <div className="h-screen flex flex-col">
             <Header />
             <div className="container mx-auto flex-1">{children}</div>
             <Footer />
           </div>
           <Toaster richColors position="bottom-right" />
-        </QueryClientProvider>
+        </QueryAndAuthProvider>
       </body>
     </html>
   );
