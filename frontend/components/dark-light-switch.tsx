@@ -12,11 +12,10 @@ export default function DarkLightSwitch() {
   const [isDarkMode, toggleTheme] = useLightDark();
 
   useEffect(() => {
-    const body = document.body;
     if (isDarkMode) {
-      body.classList.add("dark");
+      document.body.classList.add("dark");
     } else {
-      body.classList.remove("dark");
+      document.body.classList.remove("dark");
     }
   }, [isDarkMode]);
 

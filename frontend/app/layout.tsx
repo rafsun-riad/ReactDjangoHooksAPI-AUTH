@@ -4,6 +4,7 @@ import "./globals.css";
 
 import Footer from "@/components/footer";
 import Header from "@/components/header";
+import ThemeModeProvider from "@/providers/DarkLightProvider";
 import QueryAndAuthProvider from "@/providers/QueryAndAuthProvider";
 
 const geistSans = Geist({
@@ -27,12 +28,14 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-hidden`}
       >
         <QueryAndAuthProvider>
-          <div className="h-screen flex flex-col">
-            <Header />
-            <div className="container mx-auto flex-1">{children}</div>
-            <Footer />
-          </div>
-          <Toaster richColors position="bottom-right" />
+          <ThemeModeProvider>
+            <div className="h-screen flex flex-col">
+              <Header />
+              <div className="container mx-auto flex-1">{children}</div>
+              <Footer />
+            </div>
+            <Toaster richColors position="bottom-right" />
+          </ThemeModeProvider>
         </QueryAndAuthProvider>
       </body>
     </html>
